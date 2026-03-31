@@ -1,5 +1,11 @@
 # thesis-workflow
 
+[![Version](https://img.shields.io/badge/version-v0.1.0-blue.svg)](https://github.com/masiqi11/thesis-workflow/releases/tag/v0.1.0)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![Claude Code Skill](https://img.shields.io/badge/Claude%20Code-Skill-purple.svg)](SKILL.md)
+
+[中文](README.md) | English
+
 > A GitHub-ready Claude Code skill for thesis writing workflows: intake, evidence collection, outline planning, chapter drafting, citation verification, format auditing, AI-risk review, plagiarism-oriented rewriting, and final document build.
 
 ## Overview

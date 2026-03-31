@@ -1,5 +1,11 @@
 # thesis-workflow
 
+[![Version](https://img.shields.io/badge/version-v0.1.0-blue.svg)](https://github.com/masiqi11/thesis-workflow/releases/tag/v0.1.0)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![Claude Code Skill](https://img.shields.io/badge/Claude%20Code-Skill-purple.svg)](SKILL.md)
+
+中文 | [English](README_EN.md)
+
 > 一个可公开发布的 Claude Code 论文工作流 Skill：覆盖需求采集、证据收集、提纲规划、章节撰写、引用核验、格式审查、AI 风险复核、降重改写与终稿构建。
 
 ## 概览
