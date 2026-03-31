@@ -1,0 +1,4 @@
+# Optional dependencies for local helper tools
+# Keep minimal for GitHub-friendly distribution
+
+# Add packages here only when tools/ scripts truly require them.

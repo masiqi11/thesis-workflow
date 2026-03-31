@@ -1,0 +1,25 @@
+# Ignore OS/editor artifacts
+.DS_Store
+Thumbs.db
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Build / temp outputs
+release/
+outputs/
+*.log
+*.tmp
+
+# Local thesis artifacts
+thesis/release/
+thesis/notes/
+thesis/refs/
+thesis/figures/
+
+# IDE
+.vscode/
+.idea/
