@@ -1,32 +1,32 @@
 # thesis-workflow
 
-> A GitHub-ready Claude Code skill for thesis writing workflows: intake, evidence collection, outline planning, chapter drafting, citation verification, format auditing, AI-risk review, plagiarism-oriented rewriting, and final document build.
+> 一个可公开发布的 Claude Code 论文工作流 Skill：覆盖需求采集、证据收集、提纲规划、章节撰写、引用核验、格式审查、AI 风险复核、降重改写与终稿构建。
 
-## Overview
+## 概览
 
-`thesis-workflow` is a reusable Claude Code skill for long-form academic writing.
+`thesis-workflow` 是一个**通用型论文写作 Skill**，不是绑定某个学校模板的硬编码脚本。
 
-Its governing rule is simple:
+核心铁律只有一句：
 
-**No formal thesis writing or final formatting before requirements are clarified.**
+**在要求未澄清之前，不进入正式论文撰写与最终排版。**
 
-This repository is intended for users who need to:
-- reverse-write a thesis from an existing codebase, experiment set, or graduation project
-- manage a Markdown -> Word/PDF workflow with controlled checkpoints
-- reduce hallucinated claims, fake references, formatting churn, and long-context drift
+它适用于：
+- 基于现有项目、代码、实验结果反推论文
+- 用 Markdown -> Word/PDF 管理整篇论文交付链
+- 希望降低幻觉、虚空引用、格式返工与长上下文漂移
 
-## Features
+## 核心特性
 
-- **Intake-first workflow**: formal drafting is blocked until structure, formatting, citation, and delivery rules are explicit
-- **Evidence-driven writing**: each major claim should be traceable to code, logs, figures, experiments, screenshots, or references
-- **Citation truth checking**: references are not only formatted, but also existence-checked
-- **AI-risk auditing**: detects hallucinated implementations, fabricated experiments, terminology drift, and inconsistent metrics
-- **Agent team orchestration**: supports lead / researcher / writer / citation-checker / reviewer separation
-- **Format gating**: prevents premature Word build before text-format rules are explicit
-- **Rewrite / reduce mode**: supports plagiarism-oriented rewriting while preserving facts and anchors
-- **GitHub-ready packaging**: documentation, examples, prompts, and helper tools are arranged for public distribution
+- **需求先行**：未明确结构、格式、引用规则前，阻断正式写作
+- **证据驱动**：关键结论应绑定代码、日志、图表、实验、截图或文献来源
+- **引用真值核验**：不仅排版参考文献，还要检查文献是否真实存在
+- **AI 风险审查**：检查虚构实现、虚构实验、术语漂移、数值不一致
+- **Agent Team 协作**：支持 lead / researcher / writer / citation-checker / reviewer 分工
+- **格式闸门**：格式规则未锁定时，不允许提前进入 Word 终稿构建
+- **降重模式**：在保留事实锚点的前提下做针对性改写
+- **GitHub 友好结构**：自带 README、INSTALL、DESIGN、docs、prompts、tools、examples
 
-## Repository Structure
+## 仓库结构
 
 ```text
 thesis-workflow/
@@ -55,7 +55,7 @@ thesis-workflow/
    └─ example_dunhuang.md
 ```
 
-## Core Commands
+## 核心命令
 
 ```text
 /thesis-intake
@@ -73,7 +73,7 @@ thesis-workflow/
 /thesis-sync
 ```
 
-## Recommended Flow
+## 推荐执行链
 
 ```text
 /thesis-intake
@@ -91,49 +91,39 @@ thesis-workflow/
   -> /thesis-sync
 ```
 
-## Run Modes
+## 运行模式
 
-- `--assist` : analysis only, no formal output
-- `--draft` : generate drafts without assuming final overwrite
-- `--auto` : autonomously inspect project materials and produce notes/drafts
-- `--team` : enable multi-agent collaboration
-- `--team-strict` : strict split of file ownership and task boundaries
-- `--safe` : conservative audit / rewrite mode
-- `--aggressive` : stronger rewrite mode without changing conclusions or metrics
+- `--assist`：只分析，不产正式稿
+- `--draft`：产草稿，不默认覆盖定稿
+- `--auto`：自主审阅项目、自主收集材料
+- `--team`：启用多 Agent 协作
+- `--team-strict`：严格分文件所有权
+- `--safe`：保守审查/改写
+- `--aggressive`：更强改写，但不改结论与指标
 
-## What Makes This Different
+## 快速开始
 
-Typical AI thesis workflows fail because:
-- drafting starts before requirements are clear
-- references are formatted but never truth-checked
-- implementation claims exceed what the project really does
-- final formatting begins before rules are locked
+1. 将本仓库放到本地 Claude Code skills 目录下
+2. 确保根目录存在 `SKILL.md`
+3. 从 `/thesis-intake --assist` 开始
+4. 在格式规则明确前，不进入 `/thesis-format` 和 `/thesis-build`
 
-`thesis-workflow` is designed to break that failure chain with explicit gates.
+## 示例
 
-## Quick Start
+参考 [examples/example_dunhuang.md](examples/example_dunhuang.md)。
 
-1. Put this repository under your Claude Code skills directory.
-2. Ensure `SKILL.md` exists at the repository root.
-3. Start with `/thesis-intake --assist`.
-4. Do not enter `/thesis-format` or `/thesis-build` until requirements are explicit.
+## 安装
 
-## Example Use Case
+见 [INSTALL.md](INSTALL.md)。
 
-See [examples/example_dunhuang.md](examples/example_dunhuang.md) for a graduation-project-oriented command chain.
+## 设计
 
-## Installation
+见 [DESIGN.md](DESIGN.md)。
 
-See [INSTALL.md](INSTALL.md).
+## 产品说明
 
-## Design
+见 [docs/PRD.md](docs/PRD.md)。
 
-See [DESIGN.md](DESIGN.md).
-
-## Product Notes
-
-See [docs/PRD.md](docs/PRD.md).
-
-## License
+## 许可证
 
 MIT
