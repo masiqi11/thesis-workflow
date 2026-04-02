@@ -1,6 +1,6 @@
 # thesis-workflow
 
-[![Version](https://img.shields.io/badge/version-v0.1.0-blue.svg)](https://github.com/masiqi11/thesis-workflow/releases/tag/v0.1.0)
+[![Version](https://img.shields.io/badge/version-v0.2.0-blue.svg)](https://github.com/masiqi11/thesis-workflow/releases/tag/v0.2.0)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Claude Code Skill](https://img.shields.io/badge/Claude%20Code-Skill-purple.svg)](SKILL.md)
 
@@ -30,6 +30,13 @@
 - **Agent Team 协作**：支持 lead / researcher / writer / citation-checker / reviewer 分工
 - **格式闸门**：格式规则未锁定时，不允许提前进入 Word 终稿构建
 - **降重模式**：在保留事实锚点的前提下做针对性改写
+- **论文引用收集**：数据准备阶段强制收集引用论文，优先国外论文便于下载
+- **资源就绪闸门**：引用论文、实验数据、图表、证据源未齐备禁止正文撰写
+- **正文图表耦合**：边写边插图，禁止先写正文后插图
+- **模板要求持久化**：格式要求写入文件，不依赖上下文记忆
+- **图表策略区分**：概念图生成提示词，实验数据图用 Python 脚本生成
+- **字数预算规划**：按论文类型（算法为主/系统为主/均衡型）差异化分配各章字数
+- **降低 AI 率规范**：禁止机械递进、对称编号等 AI 写作指纹
 - **GitHub 友好结构**：自带 README、INSTALL、DESIGN、docs、prompts、tools、examples
 
 ## 仓库结构
@@ -133,3 +140,22 @@ thesis-workflow/
 ## 许可证
 
 MIT
+
+## 更新日志
+
+### v0.2.0
+
+- 新增论文引用收集（thesis-data 强制收集，优先国外论文，下载失败通知用户）
+- 新增资源就绪闸门（引用/数据/图表/证据源未齐备禁止正文撰写）
+- 新增正文与图表强耦合（边写边插图，缺图即补）
+- 新增模板要求持久化（写入 template_requirements.md，不依赖上下文记忆）
+- 新增图表生成策略区分（概念图→提示词，实验数据图→Python 脚本，截图→实际捕获）
+- 新增字数预算规划（按论文类型差异化分配，含各学历层次参考）
+- 新增降低 AI 率写作规范（禁止机械递进/对称编号/AI 套话等写作指纹）
+- 摘要、Abstract、目录、致谢、参考文献改为默认必要项
+- 引用规则细化（文内标记格式、标记位置、条目必需字段）
+- 修复 5 个已记录问题（#13-#17）
+
+### v0.1.0
+
+- 初始版本，覆盖完整论文工作流
