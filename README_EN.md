@@ -52,7 +52,12 @@ thesis-workflow/
 ├── requirements.txt
 ├── .gitignore
 ├── docs/
-│   └── PRD.md
+│   ├── PRD.md
+│   ├── KNOWN_ISSUES.md
+│   ├── TEMPLATES.md
+│   ├── TEAM_ORCHESTRATION.md
+│   ├── TERMINOLOGY.md
+│   └── template_requirements_template.md
 ├── prompts/
 │   ├── README.md
 │   ├── intake_prompt.md
@@ -64,27 +69,19 @@ thesis-workflow/
 │   ├── build_thesis.py
 │   ├── collect_assets.py
 │   └── verify_citations.py
+├── tests/
+│   ├── test_build_thesis.py
+│   ├── test_collect_assets.py
+│   └── test_verify_citations.py
 └── examples/
     └── example_dunhuang.md
 ```
 
 ## Core Commands
 
-```text
-/thesis-intake
-/thesis-data
-/thesis-outline
-/thesis-assets
-/thesis-write
-/thesis-content
-/thesis-citations
-/thesis-format
-/thesis-audit
-/thesis-reduce
-/thesis-build
-/thesis-defense
-/thesis-sync
-```
+The 13 sub-skills are defined in [SKILL.md](SKILL.md#子-skill-总览).
+See [docs/TEMPLATES.md](docs/TEMPLATES.md) for I/O contracts and
+[docs/TEAM_ORCHESTRATION.md](docs/TEAM_ORCHESTRATION.md) for multi-agent rules.
 
 ## Recommended Flow
 

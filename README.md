@@ -43,57 +43,54 @@
 
 ```text
 thesis-workflow/
-├─ SKILL.md
-├─ README.md
-├─ README_EN.md
-├─ DESIGN.md
-├─ INSTALL.md
-├─ LICENSE
-├─ requirements.txt
-├─ .gitignore
-├─ docs/
-│  └─ PRD.md
-├─ prompts/
-│  ├─ README.md
-│  ├─ intake_prompt.md
-│  ├─ writer_prompt.md
-│  ├─ citation_checker_prompt.md
-│  └─ audit_prompt.md
-├─ tools/
-│  ├─ README.md
-│  ├─ build_thesis.py
-│  ├─ collect_assets.py
-│  └─ verify_citations.py
-└─ examples/
-   └─ example_dunhuang.md
+├── SKILL.md
+├── README.md
+├── README_EN.md
+├── DESIGN.md
+├── INSTALL.md
+├── LICENSE
+├── requirements.txt
+├── .gitignore
+├── docs/
+│   ├── PRD.md
+│   ├── KNOWN_ISSUES.md
+│   ├── TEMPLATES.md
+│   ├── TEAM_ORCHESTRATION.md
+│   ├── TERMINOLOGY.md
+│   └── template_requirements_template.md
+├── prompts/
+│   ├── README.md
+│   ├── intake_prompt.md
+│   ├── writer_prompt.md
+│   ├── citation_checker_prompt.md
+│   └── audit_prompt.md
+├── tools/
+│   ├── README.md
+│   ├── build_thesis.py
+│   ├── collect_assets.py
+│   └── verify_citations.py
+├── tests/
+│   ├── test_build_thesis.py
+│   ├── test_collect_assets.py
+│   └── test_verify_citations.py
+└── examples/
+   └── example_dunhuang.md
 ```
 
 ## 核心命令
 
-```text
-/thesis-intake
-/thesis-data
-/thesis-outline
-/thesis-assets
-/thesis-write
-/thesis-content
-/thesis-citations
-/thesis-format
-/thesis-audit
-/thesis-reduce
-/thesis-build
-/thesis-defense
-/thesis-sync
-```
+13 个子 Skill 的完整定义请见 [SKILL.md](SKILL.md#子-skill-总览)。
+推荐执行链见下节；契约与 Team 协作细则见 [docs/TEMPLATES.md](docs/TEMPLATES.md)
+与 [docs/TEAM_ORCHESTRATION.md](docs/TEAM_ORCHESTRATION.md)。
 
 ## 推荐执行链
 
 ```text
 /thesis-intake
-  -> /thesis-data
-  -> /thesis-outline
+  -> /thesis-data (含引用论文收集)
+  -> /thesis-outline (含字数预算)
   -> /thesis-assets
-  -> /thesis-write
+  -> /thesis-write (资源就绪闸门)
   -> /thesis-content
   -> /thesis-citations
   -> /thesis-format

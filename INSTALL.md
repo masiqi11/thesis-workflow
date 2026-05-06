@@ -47,10 +47,13 @@ Typical command chain:
 
 ## Publishing to GitHub
 
+Run the commands below from the skill root (`~/.claude/skills/thesis-workflow`
+on Linux/macOS, `%USERPROFILE%\.claude\skills\thesis-workflow` on Windows).
+
 ### Option A: manual git workflow
 
 ```bash
-cd "E:/Project/Final-Exam/lxy/skills/thesis-workflow"
+cd ~/.claude/skills/thesis-workflow   # Windows: cd %USERPROFILE%\.claude\skills\thesis-workflow
 git init
 git add .
 git commit -m "feat: scaffold thesis-workflow skill"
@@ -62,7 +65,7 @@ git push -u origin main
 ### Option B: use GitHub CLI
 
 ```bash
-cd "E:/Project/Final-Exam/lxy/skills/thesis-workflow"
+cd ~/.claude/skills/thesis-workflow   # Windows: cd %USERPROFILE%\.claude\skills\thesis-workflow
 git init
 git add .
 git commit -m "feat: scaffold thesis-workflow skill"
