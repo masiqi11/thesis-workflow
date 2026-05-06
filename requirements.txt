@@ -1,4 +1,7 @@
 # Optional dependencies for local helper tools
-# Keep minimal for GitHub-friendly distribution
+# Keep minimal for GitHub-friendly distribution.
 
-# Add packages here only when tools/ scripts truly require them.
+# Runtime: tools/*.py have zero runtime dependencies (stdlib only).
+
+# Dev / test (install with: pip install -r requirements.txt --extra)
+# pytest>=7.0      # required to run tests/ — uncomment locally
