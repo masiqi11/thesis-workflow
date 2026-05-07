@@ -132,6 +132,29 @@
 
 ### v0.2.0
 
-- 增加更多 prompts 片段
-- 增加图表、引用、docx 构建辅助脚本
-- 增加示例资产清单与输出模板
+- `/thesis-data` 强制收集引用论文，并引入"资源就绪闸门"
+- 正文与图表强耦合（边写边插图）
+- 格式要求持久化到 `template_requirements.md`
+- 字数预算规划（按算法/系统/均衡型差异化分配）
+- 降低 AI 率写作规范（禁止机械递进、对称编号等指纹）
+- 摘要、Abstract、目录、致谢改为默认必要项
+- 修复 17 条历史问题（见 `docs/KNOWN_ISSUES.md`）
+
+### v0.3.0（当前版本）
+
+- 新增 3 个 prompt 模板（`outline_prompt`、`reduce_prompt`、`format_prompt`）
+  → 7 个子 Skill 现有对应 prompt，覆盖率从 33% 提升至 58%
+- 新增 GitHub Actions CI，Push/PR 自动运行 pytest（Python 3.10/3.11/3.12）
+- 新增 `thesis/` 目录骨架与 README，明确全流水线产物路径
+- `outline_prompt` 内置论文类型识别逻辑（算法/系统/均衡型），解决 P2-5 归属问题
+- `reduce_prompt` 定义事实锚点不变式与 AI 指纹改写分类
+- `format_prompt` 定义 10 维度格式检查表与 PASS/FAIL/BLOCKED 状态机
+- helper tools 全面重写：类型注解、logging、独立退出码、可测试结构
+- 15 个 pytest 用例覆盖三个工具的正/反例与 CLI 退出码
+
+### v0.4.0（规划）
+
+- 补全剩余子 Skill prompt 模板（`content_prompt`、`defense_prompt`、`sync_prompt`）
+- docx 渲染辅助脚本（从 Markdown 生成 Word 并校验样式）
+- DOI/arXiv 元数据批量查询脚本
+- 图像清洗与尺寸规范化辅助脚本

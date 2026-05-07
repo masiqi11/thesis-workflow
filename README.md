@@ -51,6 +51,9 @@ thesis-workflow/
 ├── LICENSE
 ├── requirements.txt
 ├── .gitignore
+├── .github/
+│   └── workflows/
+│       └── ci.yml              ← pytest on push/PR
 ├── docs/
 │   ├── PRD.md
 │   ├── KNOWN_ISSUES.md
@@ -61,9 +64,12 @@ thesis-workflow/
 ├── prompts/
 │   ├── README.md
 │   ├── intake_prompt.md
+│   ├── outline_prompt.md       ← 章节结构/字数预算/论文类型识别
 │   ├── writer_prompt.md
 │   ├── citation_checker_prompt.md
-│   └── audit_prompt.md
+│   ├── audit_prompt.md
+│   ├── format_prompt.md        ← 格式合规检查（10 维度）
+│   └── reduce_prompt.md        ← 降重改写（事实锚点保护）
 ├── tools/
 │   ├── README.md
 │   ├── build_thesis.py
@@ -73,6 +79,8 @@ thesis-workflow/
 │   ├── test_build_thesis.py
 │   ├── test_collect_assets.py
 │   └── test_verify_citations.py
+├── thesis/
+│   └── README.md               ← 全流水线产物路径说明
 └── examples/
    └── example_dunhuang.md
 ```

@@ -51,6 +51,9 @@ thesis-workflow/
 ├── LICENSE
 ├── requirements.txt
 ├── .gitignore
+├── .github/
+│   └── workflows/
+│       └── ci.yml                ← pytest on push/PR
 ├── docs/
 │   ├── PRD.md
 │   ├── KNOWN_ISSUES.md
@@ -61,9 +64,12 @@ thesis-workflow/
 ├── prompts/
 │   ├── README.md
 │   ├── intake_prompt.md
+│   ├── outline_prompt.md         ← chapter structure / word budget / thesis type
 │   ├── writer_prompt.md
 │   ├── citation_checker_prompt.md
-│   └── audit_prompt.md
+│   ├── audit_prompt.md
+│   ├── format_prompt.md          ← 10-dimension format compliance gate
+│   └── reduce_prompt.md          ← plagiarism reduction with fact-anchor protection
 ├── tools/
 │   ├── README.md
 │   ├── build_thesis.py
@@ -73,6 +79,8 @@ thesis-workflow/
 │   ├── test_build_thesis.py
 │   ├── test_collect_assets.py
 │   └── test_verify_citations.py
+├── thesis/
+│   └── README.md                 ← pipeline artifact path guide
 └── examples/
     └── example_dunhuang.md
 ```
