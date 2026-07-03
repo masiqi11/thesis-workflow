@@ -58,6 +58,7 @@ thesis-workflow/
 ├── docs/
 │   ├── PRD.md
 │   ├── WORKFLOW.md               ← end-to-end guide: topic input → final build
+│   ├── AI_TRIGGER_WORDS.md       ← AI-signature phrase list + replacements (lexicon layer)
 │   ├── KNOWN_ISSUES.md
 │   ├── TEMPLATES.md
 │   ├── TEAM_ORCHESTRATION.md

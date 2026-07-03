@@ -58,6 +58,7 @@ thesis-workflow/
 ├── docs/
 │   ├── PRD.md
 │   ├── WORKFLOW.md             ← 端到端指南：题目输入 → 终稿输出
+│   ├── AI_TRIGGER_WORDS.md     ← AI 痕迹词清单与替换建议（降 AI 率词汇层）
 │   ├── KNOWN_ISSUES.md
 │   ├── TEMPLATES.md
 │   ├── TEAM_ORCHESTRATION.md

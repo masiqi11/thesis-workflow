@@ -162,6 +162,10 @@
 - 机器可查闸门：`workflow_state.md` 状态板 + `tools/check_gates.py`
 - 真实性链条闭环：降重同步证据映射、图表数据溯源、build 前置复查
 - 新增 `docs/WORKFLOW.md` 端到端指南
+- 降 AI 率增强：吸纳 `telagod/code-abyss` 中的写作质量技术（AI 痕迹词清单
+  `docs/AI_TRIGGER_WORDS.md` + reduce 的结构→词汇→内容三层改写模型）；
+  明确排除检测器规避手段（隐藏字符/同形字/docx run 篡改），坚持"改善写作、
+  不伪装文本"的边界
 
 ### v0.5.0（规划）
 
