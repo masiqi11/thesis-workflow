@@ -20,6 +20,9 @@ thesis/release/
 thesis/notes/
 thesis/refs/
 thesis/figures/
+# chapter drafts (keep the skill-repo README)
+thesis/*.md
+!thesis/README.md
 
 # IDE
 .vscode/

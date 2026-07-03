@@ -8,16 +8,17 @@ Type: 算法为主型 · 本科 · 5 章 · 总字数约 20000
 ## Recommended command chain
 
 ```text
-/thesis-intake --assist
+/thesis-intake --assist                # 含题目背景分析（第 0 步）
 /thesis-data --auto
 /thesis-outline --draft
 /thesis-assets --auto
 /thesis-write chapter=2 --draft        # 相关技术与理论基础
 /thesis-write chapter=5 --draft        # 总结与展望（短章先行，验证流水线）
 /thesis-content --safe
-/thesis-citations --safe
-/thesis-format --draft
-/thesis-audit --safe
+/thesis-citations --safe               # 真值闸门
+/thesis-audit --safe                   # P0 清零后才可降重/排版
+/thesis-reduce --safe                  # 可选；锚点保护
+/thesis-format --draft                 # 排版检查（最后一道文本闸门）
 /thesis-build
 ```
 

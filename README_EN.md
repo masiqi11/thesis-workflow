@@ -1,6 +1,7 @@
 # thesis-workflow
 
-[![Version](https://img.shields.io/badge/version-v0.2.0-blue.svg)](https://github.com/masiqi11/thesis-workflow/releases/tag/v0.2.0)
+[![Version](https://img.shields.io/badge/version-v0.4.0-blue.svg)](https://github.com/masiqi11/thesis-workflow/releases)
+[![CI](https://github.com/masiqi11/thesis-workflow/actions/workflows/ci.yml/badge.svg)](https://github.com/masiqi11/thesis-workflow/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Claude Code Skill](https://img.shields.io/badge/Claude%20Code-Skill-purple.svg)](SKILL.md)
 
@@ -56,29 +57,38 @@ thesis-workflow/
 │       └── ci.yml                ← pytest on push/PR
 ├── docs/
 │   ├── PRD.md
+│   ├── WORKFLOW.md               ← end-to-end guide: topic input → final build
 │   ├── KNOWN_ISSUES.md
 │   ├── TEMPLATES.md
 │   ├── TEAM_ORCHESTRATION.md
 │   ├── TERMINOLOGY.md
 │   └── template_requirements_template.md
-├── prompts/
+├── prompts/                      ← all 13 sub-skills covered (see prompts/README.md)
 │   ├── README.md
-│   ├── intake_prompt.md
-│   ├── outline_prompt.md         ← chapter structure / word budget / thesis type
+│   ├── intake_prompt.md          ← incl. Step 0 topic/background analysis
+│   ├── data_prompt.md
+│   ├── outline_prompt.md
+│   ├── assets_prompt.md
 │   ├── writer_prompt.md
+│   ├── content_prompt.md
 │   ├── citation_checker_prompt.md
 │   ├── audit_prompt.md
-│   ├── format_prompt.md          ← 10-dimension format compliance gate
-│   └── reduce_prompt.md          ← plagiarism reduction with fact-anchor protection
+│   ├── reduce_prompt.md
+│   ├── format_prompt.md
+│   ├── build_prompt.md
+│   ├── defense_prompt.md
+│   └── sync_prompt.md
 ├── tools/
 │   ├── README.md
 │   ├── build_thesis.py
 │   ├── collect_assets.py
-│   └── verify_citations.py
+│   ├── verify_citations.py
+│   └── check_gates.py            ← one-shot verification of all pipeline gates
 ├── tests/
 │   ├── test_build_thesis.py
 │   ├── test_collect_assets.py
-│   └── test_verify_citations.py
+│   ├── test_verify_citations.py
+│   └── test_check_gates.py
 ├── thesis/
 │   └── README.md                 ← pipeline artifact path guide
 └── examples/
@@ -94,20 +104,24 @@ See [docs/TEMPLATES.md](docs/TEMPLATES.md) for I/O contracts and
 ## Recommended Flow
 
 ```text
-/thesis-intake
+/thesis-intake (includes topic/background analysis)
   -> /thesis-data (includes reference collection)
   -> /thesis-outline (includes word budget)
   -> /thesis-assets
   -> /thesis-write (resource readiness gate)
   -> /thesis-content
-  -> /thesis-citations
-  -> /thesis-format
-  -> /thesis-audit
-  -> /thesis-reduce
+  -> /thesis-citations (truth gate)
+  -> /thesis-audit (P0-zero gate)
+  -> /thesis-reduce (anchor-protected, optional)
+  -> /thesis-format (format compliance gate)
   -> /thesis-build
   -> /thesis-defense
   -> /thesis-sync
 ```
+
+> Ordering rule: audit before reduce (reduce consumes audit's P2 flags), reduce
+> before format (any text change invalidates a prior format check). Full guide:
+> [docs/WORKFLOW.md](docs/WORKFLOW.md).
 
 ## Run Modes
 
@@ -157,6 +171,26 @@ See [docs/PRD.md](docs/PRD.md).
 MIT
 
 ## Changelog
+
+### v0.4.0
+
+- **Fixed pipeline ordering (important)**: audit → reduce → format → build; the old
+  format-before-audit order made the P0 gate unreachable and is now deprecated
+- Added topic/background analysis entry stage (intake Step 0: topic decomposition,
+  research questions, feasibility, innovation candidates)
+- All 13 sub-skills now have prompt templates (added data/assets/content/build/defense/sync)
+- Machine-checkable gates: `workflow_state.md` status board + `tools/check_gates.py` (19 tests)
+- Truthfulness chain closed: reduce must sync the evidence map after rewriting;
+  experiment figures require data provenance; build re-verifies every gate itself
+- Added `docs/WORKFLOW.md` end-to-end guide; unified `thesis/refs/references.md` path
+- Fixed `.gitignore` not covering chapter drafts
+
+### v0.3.0
+
+- GitHub Actions CI (pytest on Python 3.10/3.11/3.12)
+- Added outline / reduce / format prompt templates
+- Added `thesis/` directory skeleton guide
+- Rewrote helper tools: type hints, logging, distinct exit codes; 15 pytest cases
 
 ### v0.2.0
 

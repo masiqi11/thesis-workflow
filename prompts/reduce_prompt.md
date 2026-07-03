@@ -8,7 +8,8 @@ Reduce repetition and AI-fingerprint patterns in flagged paragraphs without
 drifting conclusions, metrics, model names, or dataset names.
 
 ## Stage in pipeline
-Runs at `/thesis-reduce` (stage 10), after `/thesis-audit` clears P0 items.
+Runs at `/thesis-reduce` (stage 9), after `/thesis-audit` (stage 8) clears P0 items
+and BEFORE `/thesis-format` (stage 10) — format must check the post-reduce text.
 Never run before audit — rewriting on unverified content invalidates the evidence map.
 
 ## Inputs (mandatory)
@@ -26,8 +27,26 @@ If the audit reports any unresolved P0, halt and return an error — do not rewr
 
 | File | Content |
 |---|---|
-| `thesis/<chapter>_reduced.md` | Rewritten chapter; overwrites draft only after user approval |
+| `thesis/<chapter>_reduced.md` | Rewritten chapter; replaces the canonical chapter file after user approval |
 | `thesis/notes/reduce_report.md` | Per-paragraph change log (see schema below) |
+| `thesis/notes/chapter_evidence_map.md` | **updated in place** — see evidence-map sync rule |
+
+### Evidence-map sync rule (mandatory)
+
+Rewriting can merge, split, or renumber paragraphs/sections. After the rewrite:
+1. For every evidence-map row whose claim lives in a changed paragraph, verify the
+   claim text still appears (possibly reworded) and update its `source_loc`
+   (§section / paragraph anchor) to the new location.
+2. If a claim was dropped by the rewrite, mark its row `status = removed-by-reduce`
+   and flag it in `reduce_report.md` — a silently vanished verified claim is a defect.
+3. Do NOT ship the reduced chapter until the evidence map matches the new text.
+   A stale map means format/build lose claim traceability entirely.
+
+### Canonical-file resolution rule
+
+After user approval, the `_reduced.md` content replaces the original chapter file
+and the `_reduced.md` copy is deleted. `/thesis-format` and `/thesis-build` read
+ONLY canonical chapter files; a leftover `_reduced.md` is treated as a gate FAIL.
 
 ### `reduce_report.md` schema
 

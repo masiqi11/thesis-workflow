@@ -7,8 +7,10 @@ This directory stores helper scripts for local thesis workflow automation.
 - `collect_assets.py` — scan a figures directory and emit a markdown manifest
 - `verify_citations.py` — perform offline structural checks on a references markdown file
 - `build_thesis.py` — wrap an existing build command or script and capture result metadata
+- `check_gates.py` — verify all pipeline gates from their gate files (the machine-checkable
+  precondition for `/thesis-build`)
 
-All three are stdlib-only (no third-party runtime deps). Tests live in `../tests/`
+All four are stdlib-only (no third-party runtime deps). Tests live in `../tests/`
 and require `pytest>=7.0`.
 
 ## Usage
@@ -31,9 +33,16 @@ python tools/verify_citations.py --input thesis/refs/references.md --allow-gaps
 python tools/build_thesis.py --cmd "python thesis/gen_word.py" --log build/build.log
 # Use shell features (pipes/redirects) — only with trusted commands:
 python tools/build_thesis.py --cmd "echo done | tee build.log" --shell
+
+# Verify all pipeline gates (intake / citations / audit / reduce / format)
+python tools/check_gates.py --thesis-dir thesis
+# Check a single gate:
+python tools/check_gates.py --thesis-dir thesis --gate format
 ```
 
-## Exit codes (verify_citations.py)
+## Exit codes
+
+`verify_citations.py`:
 
 | Code | Meaning |
 |---|---|
@@ -42,7 +51,16 @@ python tools/build_thesis.py --cmd "echo done | tee build.log" --shell
 | 2 | Duplicate numbering found |
 | 3 | Numbering gap or out-of-order |
 
-Useful in CI: distinguish duplicates from gaps without parsing stdout.
+`check_gates.py`:
+
+| Code | Meaning |
+|---|---|
+| 0 | All requested gates pass |
+| 1 | I/O or usage error |
+| 4 | One or more gates fail (per-gate detail on stdout) |
+
+Useful in CI and as the `/thesis-build` pre-flight: distinct codes mean no
+stdout parsing is needed.
 
 ## Encoding
 

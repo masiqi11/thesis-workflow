@@ -7,11 +7,14 @@ Detect hallucinated implementation claims, fabricated experiments, inconsistent
 metrics, terminology drift, and unsupported conclusions.
 
 ## Stage in pipeline
-Runs at `/thesis-audit` (stage 9). Consumes — does NOT regenerate — the citation
-truth report. Reference fact-checking is owned exclusively by
-`/thesis-citations` (citation_checker_prompt.md). If audit finds suspect refs,
-it logs them to `prioritized_fix_list.md` and refers back; it does not call
-search/fetch tools itself.
+Runs at `/thesis-audit` (stage 8), after `/thesis-citations` (stage 7) and BEFORE
+`/thesis-reduce` (stage 9) and `/thesis-format` (stage 10) — reduce consumes this
+audit's P2 flags, and format requires this audit's P0 count to be zero.
+
+Consumes — does NOT regenerate — the citation truth report. Reference fact-checking
+is owned exclusively by `/thesis-citations` (citation_checker_prompt.md). If audit
+finds suspect refs, it logs them to `prioritized_fix_list.md` and refers back; it
+does not call search/fetch tools itself.
 
 ## Inputs (mandatory file paths)
 
@@ -82,6 +85,10 @@ with rationale before `/thesis-build`. P2 is advisory.
 6. unsupported or exaggerated conclusions
 7. cross-reference with `reference_truth_report.md` (do **not** re-verify, only flag
    unprocessed `fake-risk` / `partial` refs that the chapter depends on)
+8. figure data provenance: every `source_type = python_script` figure in
+   `figure_plan.md` must have a script under `thesis/figures/scripts/` whose data
+   source traces to `metric_tables.md` or a real results file — a plot with no
+   traceable data source is a P0 (fabricated experiment visual)
 
 ## Token budget
 ≤ 20k output tokens total across all three files.

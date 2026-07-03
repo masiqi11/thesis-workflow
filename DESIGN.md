@@ -36,19 +36,19 @@
                                        v
                                 /thesis-write
                                        │
-                         ┌─────────────┼─────────────┐
-                         v             v             v
-                 /thesis-content /thesis-citations /thesis-audit
-                         │             │             │
-                         └─────────────┴──────┬──────┘
-                                              v
-                                       /thesis-format
-                                              │
-                                       /thesis-reduce
-                                              │
-                                       /thesis-build
-                                              │
-                                   /thesis-defense /thesis-sync
+                                /thesis-content   （内部一致性，离线）
+                                       │
+                                /thesis-citations （引用真值，联网独占）
+                                       │
+                                /thesis-audit     （AI 风险总审，P0 清零闸门）
+                                       │
+                                /thesis-reduce    （可选降重，锚点保护）
+                                       │
+                                /thesis-format    （最后一道文本闸门）
+                                       │
+                                /thesis-build     （复查全部闸门后独占产出 docx/pdf）
+                                       │
+                            /thesis-defense -> /thesis-sync
 ```
 
 ### 核心组件
@@ -152,9 +152,20 @@
 - helper tools 全面重写：类型注解、logging、独立退出码、可测试结构
 - 15 个 pytest 用例覆盖三个工具的正/反例与 CLI 退出码
 
-### v0.4.0（规划）
+### v0.4.0（当前版本）
 
-- 补全剩余子 Skill prompt 模板（`content_prompt`、`defense_prompt`、`sync_prompt`）
+- **修正执行顺序**：audit → reduce → format → build（旧的 format-在-audit-前
+  顺序使 P0 闸门在逻辑上无法生效，已废弃）
+- 新增题目背景分析入口（intake 第 0 步），工作流入口正式定义为
+  "论文题目 + 项目背景"
+- 13/13 子 Skill 全部配备 prompt 模板（补齐 data/assets/content/build/defense/sync）
+- 机器可查闸门：`workflow_state.md` 状态板 + `tools/check_gates.py`
+- 真实性链条闭环：降重同步证据映射、图表数据溯源、build 前置复查
+- 新增 `docs/WORKFLOW.md` 端到端指南
+
+### v0.5.0（规划）
+
 - docx 渲染辅助脚本（从 Markdown 生成 Word 并校验样式）
 - DOI/arXiv 元数据批量查询脚本
 - 图像清洗与尺寸规范化辅助脚本
+- `check_gates.py` 扩展：校验 `workflow_state.md` 与闸门文件的一致性

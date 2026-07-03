@@ -16,7 +16,7 @@ web fetch, DOI/arXiv metadata APIs (SKILL.md §/thesis-citations 允许的 MCP �
 | Path | Provider |
 |---|---|
 | `thesis/*.md` | `/thesis-write` — extract in-text `[N]` citations |
-| `thesis/notes/references.md` | `/thesis-write` or user — bibliography list |
+| `thesis/refs/references.md` | `/thesis-write` maintains it incrementally — bibliography list |
 | `thesis/refs/papers_inventory.md` | `/thesis-data` — known refs with download status |
 | `thesis/refs/papers/` | `/thesis-data` — local PDF copies if any |
 
@@ -89,7 +89,7 @@ You are the citation checker.
 
 Read these inputs first:
 - thesis/*.md            (extract every [N] in-text citation)
-- thesis/notes/references.md
+- thesis/refs/references.md
 - thesis/refs/papers_inventory.md
 - thesis/refs/papers/    (local PDFs)
 

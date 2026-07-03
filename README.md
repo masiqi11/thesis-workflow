@@ -1,6 +1,7 @@
 # thesis-workflow
 
-[![Version](https://img.shields.io/badge/version-v0.2.0-blue.svg)](https://github.com/masiqi11/thesis-workflow/releases/tag/v0.2.0)
+[![Version](https://img.shields.io/badge/version-v0.4.0-blue.svg)](https://github.com/masiqi11/thesis-workflow/releases)
+[![CI](https://github.com/masiqi11/thesis-workflow/actions/workflows/ci.yml/badge.svg)](https://github.com/masiqi11/thesis-workflow/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Claude Code Skill](https://img.shields.io/badge/Claude%20Code-Skill-purple.svg)](SKILL.md)
 
@@ -56,29 +57,38 @@ thesis-workflow/
 │       └── ci.yml              ← pytest on push/PR
 ├── docs/
 │   ├── PRD.md
+│   ├── WORKFLOW.md             ← 端到端指南：题目输入 → 终稿输出
 │   ├── KNOWN_ISSUES.md
 │   ├── TEMPLATES.md
 │   ├── TEAM_ORCHESTRATION.md
 │   ├── TERMINOLOGY.md
 │   └── template_requirements_template.md
-├── prompts/
+├── prompts/                    ← 13 个子 Skill 全覆盖（见 prompts/README.md）
 │   ├── README.md
-│   ├── intake_prompt.md
-│   ├── outline_prompt.md       ← 章节结构/字数预算/论文类型识别
+│   ├── intake_prompt.md        ← 含题目背景分析（第 0 步）
+│   ├── data_prompt.md
+│   ├── outline_prompt.md
+│   ├── assets_prompt.md
 │   ├── writer_prompt.md
+│   ├── content_prompt.md
 │   ├── citation_checker_prompt.md
 │   ├── audit_prompt.md
-│   ├── format_prompt.md        ← 格式合规检查（10 维度）
-│   └── reduce_prompt.md        ← 降重改写（事实锚点保护）
+│   ├── reduce_prompt.md
+│   ├── format_prompt.md
+│   ├── build_prompt.md
+│   ├── defense_prompt.md
+│   └── sync_prompt.md
 ├── tools/
 │   ├── README.md
 │   ├── build_thesis.py
 │   ├── collect_assets.py
-│   └── verify_citations.py
+│   ├── verify_citations.py
+│   └── check_gates.py          ← 一键校验全部流程闸门
 ├── tests/
 │   ├── test_build_thesis.py
 │   ├── test_collect_assets.py
-│   └── test_verify_citations.py
+│   ├── test_verify_citations.py
+│   └── test_check_gates.py
 ├── thesis/
 │   └── README.md               ← 全流水线产物路径说明
 └── examples/
@@ -94,20 +104,23 @@ thesis-workflow/
 ## 推荐执行链
 
 ```text
-/thesis-intake
+/thesis-intake (含题目背景分析)
   -> /thesis-data (含引用论文收集)
   -> /thesis-outline (含字数预算)
   -> /thesis-assets
   -> /thesis-write (资源就绪闸门)
   -> /thesis-content
-  -> /thesis-citations
-  -> /thesis-format
-  -> /thesis-audit
-  -> /thesis-reduce
+  -> /thesis-citations (真值闸门)
+  -> /thesis-audit (P0 清零闸门)
+  -> /thesis-reduce (锚点保护，可选)
+  -> /thesis-format (排版检查闸门)
   -> /thesis-build
   -> /thesis-defense
   -> /thesis-sync
 ```
+
+> 顺序铁律：审查在降重前（降重消费审查的 P2 标记），降重在排版前
+> （改文本后排版检查必须重跑）。完整流程指南见 [docs/WORKFLOW.md](docs/WORKFLOW.md)。
 
 ## 运行模式
 
@@ -147,6 +160,25 @@ thesis-workflow/
 MIT
 
 ## 更新日志
+
+### v0.4.0
+
+- **修正执行顺序（重要）**：审查 → 降重 → 排版 → 终稿；废弃旧的"排版在审查前"
+  顺序（该顺序使 P0 闸门无法生效）
+- 新增题目背景分析入口（intake 第 0 步：题目拆解/研究问题/可行性/创新点候选）
+- 13 个子 Skill 全部配备 prompt 模板（新增 data/assets/content/build/defense/sync 六个）
+- 新增机器可查闸门：`workflow_state.md` 状态板 + `tools/check_gates.py`（含 19 个测试）
+- 真实性链条闭环：降重后强制同步证据映射；实验图必须记录数据溯源；
+  build 前自行复查全部闸门
+- 新增 `docs/WORKFLOW.md` 端到端指南；`thesis/refs/references.md` 路径统一
+- 修复 `.gitignore` 未忽略章节草稿的问题
+
+### v0.3.0
+
+- 新增 GitHub Actions CI（pytest，Python 3.10/3.11/3.12）
+- 新增 outline / reduce / format 三个 prompt 模板
+- 新增 `thesis/` 目录骨架说明
+- helper tools 重写：类型注解、logging、独立退出码；新增 15 个 pytest 用例
 
 ### v0.2.0
 

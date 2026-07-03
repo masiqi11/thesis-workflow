@@ -7,22 +7,27 @@ Verify that all chapters, figures, tables, citations, and front matter comply wi
 `template_requirements.md` before invoking `/thesis-build`.
 
 ## Stage in pipeline
-Runs at `/thesis-format` (stage 8). Runs after `/thesis-audit` (P0 cleared) and
-before `/thesis-build`. This is the last gate; if anything fails here the build
-is blocked.
+Runs at `/thesis-format` (stage 10). Runs after `/thesis-audit` (stage 8, P0 cleared)
+and after `/thesis-reduce` (stage 9, if used — rewrites merged, evidence map synced).
+This is the last gate before `/thesis-build`; any FAIL here blocks the build.
+
+Format must run AFTER any step that mutates chapter text. If reduce runs again,
+format must re-run.
 
 ## Inputs (mandatory)
 
 | Path | Provider |
 |---|---|
 | `thesis/notes/template_requirements.md` | `/thesis-intake` — sole format source of truth |
-| `thesis/*.md` | `/thesis-write` + `/thesis-reduce` — chapters |
+| `thesis/*.md` | canonical chapter files (post-write, post-reduce-merge) |
 | `thesis/notes/assets_manifest.md` | `/thesis-assets` — figure inventory |
 | `thesis/notes/references_checked.md` | `/thesis-citations` — clean bibliography |
 | `thesis/notes/ai_risk_audit.md` | `/thesis-audit` — must show P0 = none |
 
-Hard gate: if `ai_risk_audit.md` still lists P0 items, emit `format_audit.md` with
-status = `BLOCKED` and halt.
+Hard gates (any one triggers `BLOCKED` and halt):
+- `ai_risk_audit.md` still lists P0 items
+- any unmerged `thesis/*_reduced.md` file exists (reduce output not yet consolidated
+  into the canonical chapter files — format would check the wrong text)
 
 ## Outputs
 

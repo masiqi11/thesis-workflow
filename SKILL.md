@@ -2,7 +2,7 @@
 name: thesis-workflow
 description: 通用型论文写作工作流。先做需求采集，再做项目审阅、框架搭建、正文撰写、引用核验、格式排版、AI 风险审查、降重优化与终稿发布。
 license: MIT
-version: 0.2.0
+version: 0.4.0
 user-invocable: true
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion, Agent
 argument-hint: <subcommand> [args] [--assist|--draft|--auto|--team|--team-strict|--safe|--aggressive]
@@ -12,13 +12,16 @@ argument-hint: <subcommand> [args] [--assist|--draft|--auto|--team|--team-strict
 
 ## 版本
 
-当前 v0.2.0。本版关键变化：
-- `/thesis-data` 强制收集引用论文，并新增"资源就绪闸门"
-- 新增正文与图表强耦合（边写边插图）与"模板要求持久化"硬约束
-- 引入字数预算规划（按算法/系统/均衡型差异化分配）
-- 引入降低 AI 率写作规范（禁止机械递进、对称编号等指纹）
-- 摘要、Abstract、目录、致谢、参考文献改为默认必要项
-- 修复 #13–#17 历史问题（详见 [`docs/KNOWN_ISSUES.md`](docs/KNOWN_ISSUES.md)）
+当前 v0.4.0。本版关键变化：
+- **修正执行顺序**：审查（audit）→ 降重（reduce）→ 排版（format）→ 终稿（build），
+  废弃旧的 format-在-audit-前顺序（该顺序使"P0 清零才可排版"闸门无法生效）
+- **新增题目分析入口**（intake 第 0 步）：题目拆解、研究问题、可行性对照、创新点候选
+- **13 个子 Skill 全部配备 prompt 模板**（`prompts/`），每节内联链接
+- **机器可查闸门**：`thesis/notes/workflow_state.md` 状态板 + `tools/check_gates.py` 一键校验
+- **真实性链条闭环**：降重后强制同步证据映射；实验图必须记录数据溯源；
+  build 前自行复查全部闸门，不信任口头声明
+- 完整流程指南见 [`docs/WORKFLOW.md`](docs/WORKFLOW.md)；
+  历史版本变化见 README 更新日志与 [`docs/KNOWN_ISSUES.md`](docs/KNOWN_ISSUES.md)
 
 ## 仓库定位
 
@@ -138,7 +141,24 @@ argument-hint: <subcommand> [args] [--assist|--draft|--auto|--team|--team-strict
 ## 强制前置闸门：`/thesis-intake`
 
 ### 目标
-开始写论文前，详细向用户收集全部关键要求。
+开始写论文前，先完成题目与背景分析，再详细向用户收集全部关键要求。
+
+### 第 0 步：题目与背景分析（工作流真正的入口）
+
+用户的原始输入通常只有**论文题目 + 项目背景**。正式采集需求前，必须先做题目分析，
+产出 `thesis/notes/topic_analysis.md`：
+
+1. **题目拆解**：研究对象、研究方法、预期产出三要素各是什么
+2. **研究问题**：拆出 2-4 个可回答的研究问题（RQ1/RQ2/...），每个问题标注
+   预期用什么证据回答（实验 / 系统实现 / 文献对比）
+3. **可行性对照**：逐条对照用户手头材料（代码、数据、实验结果），标注每个
+   研究问题的证据现状：`充分 / 部分 / 缺失`
+4. **创新点候选**：列 2-3 个候选创新点，注明支撑证据来源；无证据支撑的
+   不得列入（防止后期答辩被问穿）
+5. **论文类型初判**：算法为主 / 系统为主 / 均衡型（供 `/thesis-outline` 确认）
+
+**闸门**：若所有研究问题的证据现状均为"缺失"，说明题目与项目不匹配，
+必须提示用户调整题目或补充材料，不得继续流水线。
 
 ### 硬约束
 未完成 intake 前：
@@ -219,9 +239,13 @@ argument-hint: <subcommand> [args] [--assist|--draft|--auto|--team|--team-strict
 - 此文件是格式相关决策的**唯一真相源**，任何格式决策与此文件冲突时以此文件为准
 
 ### 输出物
+- `thesis/notes/topic_analysis.md`（题目拆解、研究问题、可行性、创新点候选）
 - `thesis/notes/intake_requirements.md`
 - `thesis/notes/missing_requirements.md`
 - `thesis/notes/template_requirements.md`（模板格式要求持久化文件）
+
+> Prompt 模板：[`prompts/intake_prompt.md`](prompts/intake_prompt.md)；
+> 起步模板：[`docs/template_requirements_template.md`](docs/template_requirements_template.md)
 
 ### 缺失清单模板
 
@@ -341,6 +365,8 @@ argument-hint: <subcommand> [args] [--assist|--draft|--auto|--team|--team-strict
 - `thesis/refs/papers/`（已下载的文献原文）
 - `thesis/refs/paper_data_extracts.md`（从文献中提取的关键数据）
 
+> Prompt 模板：[`prompts/data_prompt.md`](prompts/data_prompt.md)
+
 ---
 
 ## `/thesis-outline` — 正式撰写前框架搭建
@@ -434,6 +460,8 @@ argument-hint: <subcommand> [args] [--assist|--draft|--auto|--team|--team-strict
 - 第四章：效果如何
 - 第五章：做成了什么、还差什么
 
+> Prompt 模板：[`prompts/outline_prompt.md`](prompts/outline_prompt.md)
+
 ---
 
 ## `/thesis-assets` — 图表/截图/表格资产管理
@@ -482,7 +510,10 @@ argument-hint: <subcommand> [args] [--assist|--draft|--auto|--team|--team-strict
 
 ### 输出物
 - `thesis/figures/*.png`
-- `thesis/notes/assets_manifest.md`
+- `thesis/notes/assets_manifest.md`（须含 `data_provenance` 列：实验图记录脚本路径与数据源）
+
+> Prompt 模板：[`prompts/assets_prompt.md`](prompts/assets_prompt.md)；
+> 清单可用 `python tools/collect_assets.py` 辅助生成
 
 ---
 
@@ -603,8 +634,13 @@ AI 生成论文的典型特征是过度结构化、连接词机械重复、段�
 - Agent/Team orchestration 类
 
 ### 输出物
-- `thesis/*.md`
-- `thesis/notes/chapter_evidence_map.md`
+- `thesis/*.md`（章节正文）
+- `thesis/notes/chapter_evidence_map.md`（每条关键断言的证据追溯行）
+- `thesis/refs/references.md`（参考文献列表，随写作增量维护；`/thesis-citations` 的核验对象）
+- `thesis/notes/unresolved_issues.md`（阻塞项，追加式）
+
+> Prompt 模板：[`prompts/writer_prompt.md`](prompts/writer_prompt.md)。
+> 硬闸门：本章 unverified 占比 > 30% 时拒绝出稿。
 
 ---
 
@@ -629,6 +665,8 @@ AI 生成论文的典型特征是过度结构化、连接词机械重复、段�
 
 ### 输出物
 - `thesis/notes/content_audit.md`
+
+> Prompt 模板：[`prompts/content_prompt.md`](prompts/content_prompt.md)
 
 ---
 
@@ -666,43 +704,19 @@ AI 生成论文的典型特征是过度结构化、连接词机械重复、段�
 - 在线资源是否含访问日期
 - 可疑文献是否被标为 `fake-risk`
 
+### 输入
+- 正文各章（`thesis/*.md`）
+- 参考文献列表：`thesis/refs/references.md`（由 `/thesis-write` 汇总维护）
+- `thesis/refs/papers_inventory.md`
+
 ### 输出物
 - `thesis/notes/citation_audit.md`
 - `thesis/notes/reference_truth_report.md`
 - `thesis/refs/references_checked.md`
+- `thesis/notes/unresolved_fake_risk.md`（需用户决策的可疑文献，非空则阻断 build）
 - 可选：`thesis/refs/references.bib`
 
----
-
-## `/thesis-format` — 论文排版
-
-### 前置条件
-- intake 中的格式要求必须明确
-- 若没有文字版格式细则，不得直接进入正式排版
-
-### 目标
-将 Markdown 与资产转成符合用户明确要求的 Word 输出。
-
-### 允许调用的 MCP 能力
-- 文档生成类 / 本地执行类
-- Office/Docx 解析类
-- 模板比对类
-
-### 应检查内容
-- 封面
-- 摘要
-- Abstract
-- 目录
-- 标题编号
-- 图题表题
-- 公式格式
-- 参考文献
-- 致谢
-- 页码与分页
-
-### 输出物
-- `毕业论文_姓名_验收版.docx`
-- `thesis/notes/format_audit.md`
+> Prompt 模板：[`prompts/citation_checker_prompt.md`](prompts/citation_checker_prompt.md)
 
 ---
 
@@ -752,9 +766,18 @@ AI 生成论文的典型特征是过度结构化、连接词机械重复、段�
 - `P1`：关键指标不一致、图表解释错误
 - `P2`：术语不统一、措辞空泛
 
+#### F. 图表数据溯源类
+- 实验数据图是否有对应生成脚本（`thesis/figures/scripts/`）
+- 脚本数据源是否指向 `metric_tables.md` 或真实结果文件
+- 概念图是否被误标为实验数据图（或反之）
+
 ### 输出物
 - `thesis/notes/ai_risk_audit.md`
 - `thesis/notes/claim_evidence_matrix.md`
+- `thesis/notes/prioritized_fix_list.md`（按 P0→P1→P2 排序的修复队列）
+
+> Prompt 模板：[`prompts/audit_prompt.md`](prompts/audit_prompt.md)。
+> 职责边界：本阶段只读 `reference_truth_report.md`，不重复联网核验引用。
 
 ---
 
@@ -796,15 +819,59 @@ AI 生成论文的典型特征是过度结构化、连接词机械重复、段�
 - `--aggressive`
 
 ### 输出物
-- `thesis/notes/reduce_report.md`
-- 标注“原句 / 改写 / 保留事实点”
+- `thesis/<chapter>_reduced.md`（改写稿，经用户确认后**替换原章节文件**）
+- `thesis/notes/reduce_report.md`（标注"原句 / 改写 / 保留事实点"，每行 `anchor_preserved` 必须为 yes）
+- **同步更新** `thesis/notes/chapter_evidence_map.md`：改写导致段落合并/拆分/编号变化时，
+  受影响行的 `source_loc` 必须同步修正——否则证据映射失真，后续排版与终稿等于失去追溯能力
+
+### 正文文件唯一性规则
+降重确认后，`_reduced.md` 必须替换原章节文件并删除后缀副本。
+`/thesis-format` 与 `/thesis-build` 只读取规范章节文件（`thesis/chapter_*.md`）；
+若发现未处置的 `_reduced.md` 残留，视为闸门 FAIL。
+
+> Prompt 模板：[`prompts/reduce_prompt.md`](prompts/reduce_prompt.md)
+
+---
+
+## `/thesis-format` — 论文排版检查
+
+### 前置条件
+- `/thesis-audit` 已完成且 P0 清零
+- 若执行过 `/thesis-reduce`，改写稿已确认合并、证据映射已同步
+- intake 中的格式要求必须明确；若没有文字版格式细则，不得进入正式排版检查
+
+### 目标
+对照 `template_requirements.md` 做终稿前的 10 维度格式合规检查。
+**本阶段只产出检查报告，不生成 docx**——docx/pdf 由 `/thesis-build` 独占产出。
+
+### 允许调用的 MCP 能力
+- 文档解析类
+- Office/Docx 解析类
+- 模板比对类
+
+### 检查维度（10 项）
+标题编号 / 图题位置 / 表题位置 / 公式编号 / 引用标记样式 /
+参考文献样式 / 页面版式 / 前置页完整性 / 字数达标 / 图-文一致性
+
+### 输出物
+- `thesis/notes/format_audit.md`（Status: PASS / FAIL / BLOCKED）
+- `thesis/notes/format_ready_chapters.md`
+
+> Prompt 模板：[`prompts/format_prompt.md`](prompts/format_prompt.md)。
+> `format_audit.md` 非 PASS 时，`/thesis-build` 拒绝执行。
 
 ---
 
 ## `/thesis-build` — 终稿生成与发布
 
-### 前置条件
-- 内容、引用、格式、AI 风险审查已过关
+### 前置条件（build 自行复查，不信任口头声明）
+1. `missing_requirements.md` 中"必须补充"为空
+2. `unresolved_fake_risk.md` 为空或不存在
+3. `ai_risk_audit.md` 中 P0 计数为 0
+4. `format_audit.md` Status = PASS
+5. 无残留 `*_reduced.md` 文件
+
+以上可用 `python tools/check_gates.py` 一键校验；任一不满足即终止并报告。
 
 ### 目标
 产出正式版、验收版、PDF 与发布目录。
@@ -815,15 +882,17 @@ AI 生成论文的典型特征是过度结构化、连接词机械重复、段�
 - 校验类
 - Office 导出类
 
-### 输出物
-- `毕业论文_姓名.docx`
-- `毕业论文_姓名_验收版.docx`
-- `毕业论文_姓名.pdf`
-- `thesis/release/`
+### 输出物（docx/pdf 唯一产出者）
+- `thesis/release/毕业论文_<姓名>.docx`
+- `thesis/release/毕业论文_<姓名>_验收版.docx`
+- `thesis/release/毕业论文_<姓名>.pdf`
+- 按需：查重稿 / 盲审稿（具体命名以 `template_requirements.md` 交付要求为准）
 
 ### 失败处理
 - 若 `PermissionError`：先关闭 Word，再生成；或改名输出验收版
 - 若目录/样式异常：回查 format 层，不直接手改最终 docx
+
+> Prompt 模板：[`prompts/build_prompt.md`](prompts/build_prompt.md)
 
 ---
 
@@ -843,6 +912,8 @@ AI 生成论文的典型特征是过度结构化、连接词机械重复、段�
 - `thesis/notes/innovation_points.md`
 - `thesis/notes/qa_bank.md`
 
+> Prompt 模板：[`prompts/defense_prompt.md`](prompts/defense_prompt.md)
+
 ---
 
 ## `/thesis-sync` — 结果同步与归档
@@ -855,6 +926,9 @@ AI 生成论文的典型特征是过度结构化、连接词机械重复、段�
 - 同步新图到 `FIG_MAP` 或资产清单
 - 同步文献到引用清单
 - 同步终稿到 `release/`
+- 更新 `workflow_state.md` 至终态并生成归档索引
+
+> Prompt 模板：[`prompts/sync_prompt.md`](prompts/sync_prompt.md)
 
 ---
 
@@ -905,18 +979,34 @@ requirements 完整？
                                       ↓
                                     /thesis-citations
                                       ↓
-                                    /thesis-format
-                                      ↓
-                                    /thesis-audit
-                                      ↓
-                                    /thesis-reduce
-                                      ↓
-                                    /thesis-build
-                                      ↓
-                                    /thesis-defense
-                                      ↓
-                                    /thesis-sync
+                                    真值闸门：fake-risk 全部处置？
+                                      ├─ 否 -> unresolved_fake_risk.md 交用户决策，等待
+                                      └─ 是 -> /thesis-audit
+                                                ↓
+                                              P0 清零？
+                                                ├─ 否 -> prioritized_fix_list.md 修复后重审
+                                                └─ 是 -> /thesis-reduce（可选）
+                                                          ↓
+                                                        锚点闸门：anchor_preserved 全部 yes？
+                                                          ├─ 否 -> 回退该段改写
+                                                          └─ 是 -> /thesis-format
+                                                                    ↓
+                                                                  format_audit = PASS？
+                                                                    ├─ 否 -> 修复 FAIL 项后重查
+                                                                    └─ 是 -> /thesis-build
+                                                                              ↓
+                                                                            /thesis-defense
+                                                                              ↓
+                                                                            /thesis-sync
 ```
+
+**顺序铁律**：审查（audit）先于降重（reduce），降重先于排版（format）。
+任何改动正文的步骤之后，排版检查必须重跑；降重消费 audit 的 P2 标记，
+所以 audit 必须先行。旧版 `format → audit` 顺序已废弃（会让"P0 清零才可排版"
+闸门永远无法生效）。
+
+每个闸门的机器可查状态见 `thesis/notes/workflow_state.md`（由各阶段追加写入，
+可用 `python tools/check_gates.py` 一键校验，详见 docs/TEMPLATES.md）。
 
 ---
 
