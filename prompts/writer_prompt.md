@@ -29,6 +29,7 @@ If any of the above is missing or empty, halt and emit
 |---|---|
 | `thesis/<chapter>.md` | Markdown chapter following `template_requirements.md` heading rules |
 | `thesis/notes/chapter_evidence_map.md` | append rows; see schema below |
+| `thesis/refs/references.md` | append newly cited entries `[N] ...` in citation order (the bibliography `/thesis-citations` will verify) |
 | `thesis/notes/unresolved_issues.md` | append issues that block this chapter |
 
 ### `chapter_evidence_map.md` schema

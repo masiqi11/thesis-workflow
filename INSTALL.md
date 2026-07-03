@@ -32,7 +32,7 @@ Recommended supporting files:
 
 ### 3. Invoke the skill
 
-Typical command chain:
+Typical command chain (full pipeline, canonical order):
 
 ```text
 /thesis-intake --assist
@@ -40,9 +40,18 @@ Typical command chain:
 /thesis-outline --draft
 /thesis-assets --auto
 /thesis-write chapter=2 --draft
+/thesis-content --safe
 /thesis-citations --safe
+/thesis-audit --safe
+/thesis-reduce --safe        # optional
 /thesis-format --draft
 /thesis-build
+```
+
+Gate status can be checked at any point with:
+
+```bash
+python tools/check_gates.py --thesis-dir thesis
 ```
 
 ## Publishing to GitHub
@@ -73,13 +82,13 @@ git branch -M main
 gh repo create thesis-workflow --public --source=. --remote=origin --push
 ```
 
-## Recommended First Release
+## Recommended Release
 
-After the first push:
+After pushing:
 
 ```bash
-git tag v0.1.0
-git push origin v0.1.0
+git tag v0.4.0
+git push origin v0.4.0
 ```
 
 Use a GitHub Release note that states:

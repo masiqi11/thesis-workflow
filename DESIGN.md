@@ -36,19 +36,19 @@
                                        v
                                 /thesis-write
                                        │
-                         ┌─────────────┼─────────────┐
-                         v             v             v
-                 /thesis-content /thesis-citations /thesis-audit
-                         │             │             │
-                         └─────────────┴──────┬──────┘
-                                              v
-                                       /thesis-format
-                                              │
-                                       /thesis-reduce
-                                              │
-                                       /thesis-build
-                                              │
-                                   /thesis-defense /thesis-sync
+                                /thesis-content   （内部一致性，离线）
+                                       │
+                                /thesis-citations （引用真值，联网独占）
+                                       │
+                                /thesis-audit     （AI 风险总审，P0 清零闸门）
+                                       │
+                                /thesis-reduce    （可选降重，锚点保护）
+                                       │
+                                /thesis-format    （最后一道文本闸门）
+                                       │
+                                /thesis-build     （复查全部闸门后独占产出 docx/pdf）
+                                       │
+                            /thesis-defense -> /thesis-sync
 ```
 
 ### 核心组件
@@ -132,6 +132,44 @@
 
 ### v0.2.0
 
-- 增加更多 prompts 片段
-- 增加图表、引用、docx 构建辅助脚本
-- 增加示例资产清单与输出模板
+- `/thesis-data` 强制收集引用论文，并引入"资源就绪闸门"
+- 正文与图表强耦合（边写边插图）
+- 格式要求持久化到 `template_requirements.md`
+- 字数预算规划（按算法/系统/均衡型差异化分配）
+- 降低 AI 率写作规范（禁止机械递进、对称编号等指纹）
+- 摘要、Abstract、目录、致谢改为默认必要项
+- 修复 17 条历史问题（见 `docs/KNOWN_ISSUES.md`）
+
+### v0.3.0（当前版本）
+
+- 新增 3 个 prompt 模板（`outline_prompt`、`reduce_prompt`、`format_prompt`）
+  → 7 个子 Skill 现有对应 prompt，覆盖率从 33% 提升至 58%
+- 新增 GitHub Actions CI，Push/PR 自动运行 pytest（Python 3.10/3.11/3.12）
+- 新增 `thesis/` 目录骨架与 README，明确全流水线产物路径
+- `outline_prompt` 内置论文类型识别逻辑（算法/系统/均衡型），解决 P2-5 归属问题
+- `reduce_prompt` 定义事实锚点不变式与 AI 指纹改写分类
+- `format_prompt` 定义 10 维度格式检查表与 PASS/FAIL/BLOCKED 状态机
+- helper tools 全面重写：类型注解、logging、独立退出码、可测试结构
+- 15 个 pytest 用例覆盖三个工具的正/反例与 CLI 退出码
+
+### v0.4.0（当前版本）
+
+- **修正执行顺序**：audit → reduce → format → build（旧的 format-在-audit-前
+  顺序使 P0 闸门在逻辑上无法生效，已废弃）
+- 新增题目背景分析入口（intake 第 0 步），工作流入口正式定义为
+  "论文题目 + 项目背景"
+- 13/13 子 Skill 全部配备 prompt 模板（补齐 data/assets/content/build/defense/sync）
+- 机器可查闸门：`workflow_state.md` 状态板 + `tools/check_gates.py`
+- 真实性链条闭环：降重同步证据映射、图表数据溯源、build 前置复查
+- 新增 `docs/WORKFLOW.md` 端到端指南
+- 降 AI 率增强：吸纳 `telagod/code-abyss` 中的写作质量技术（AI 痕迹词清单
+  `docs/AI_TRIGGER_WORDS.md` + reduce 的结构→词汇→内容三层改写模型）；
+  明确排除检测器规避手段（隐藏字符/同形字/docx run 篡改），坚持"改善写作、
+  不伪装文本"的边界
+
+### v0.5.0（规划）
+
+- docx 渲染辅助脚本（从 Markdown 生成 Word 并校验样式）
+- DOI/arXiv 元数据批量查询脚本
+- 图像清洗与尺寸规范化辅助脚本
+- `check_gates.py` 扩展：校验 `workflow_state.md` 与闸门文件的一致性
